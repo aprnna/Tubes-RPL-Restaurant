@@ -99,7 +99,7 @@ export default function TableWaiting({querySearch}:any) {
 
     useEffect(() => {
     const filteredData = data.filter((item: any) =>
-        item.nama.toLowerCase().includes(querySearch.toLowerCase())
+        item.atasNama.toLowerCase().includes(querySearch.toLowerCase())
     );
 
     setSearchData(filteredData);

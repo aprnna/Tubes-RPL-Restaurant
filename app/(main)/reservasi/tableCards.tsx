@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 export default function TableCards({querySearch, onTableClick }:any) {
     const [table, setTable] = useState<any>([]);
     const [loading, setLoading] = useState(false);
-    const [searchData, setSearchData] = useState([]);
+    const [searchData, setSearchData] = useState<any>([]);
 
     const tableData = [
       {
@@ -75,17 +75,18 @@ export default function TableCards({querySearch, onTableClick }:any) {
 
   useEffect(()=>{
     setTable(tableData);
+    console.log(searchData);
   },[]);
 
   useEffect(() => {
     if(querySearch){
       const filteredData = table.filter((item: any) =>
-          item.nama.toLowerCase().includes(querySearch.toLowerCase())
+          item.name.toLowerCase().includes(querySearch.toLowerCase())
       );
 
       setSearchData(filteredData);
     }else{
-      setSearchData(table);
+      setSearchData(tableData);
     }
 
     }, [querySearch]);

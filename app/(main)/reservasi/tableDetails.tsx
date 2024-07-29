@@ -71,7 +71,11 @@ export default function TableDetails({table, onClear}:any) {
                   </div>
               </div>
               <div className="w-full border-t-2 border-dashed border-gray-400 my-4" />
-              <Button className='w-full' onPress={onClear}>Kosongkan</Button>
+                {table.status == 'Full'?(
+                  <Button className='w-full' onPress={onClear}>Kosongkan</Button>
+                ):(
+                  <></>
+                )}
             </div>
           </div>
           </motion.div>

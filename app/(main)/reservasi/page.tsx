@@ -44,7 +44,7 @@ export default function Page() {
             <div className='flex flex-col overflow-auto'>
                     <div className='flex'>
                         <div className="flex-1 flex flex-row overflow-auto">
-                            <TableCards onTableClick={handleTableClick}/>
+                            <TableCards onTableClick={handleTableClick} querySearch={querySearch}/>
                         </div>
                         <div className="flex flex-col">
                             {selectedTable && <TableDetails table={selectedTable} onClear={() => setSelectedTable(null)}/>}
