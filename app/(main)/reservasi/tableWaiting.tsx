@@ -43,45 +43,6 @@ export default function TableWaiting({querySearch}:any) {
         { key: "action", label: "Action" },
       ];
 
-    const dataReservasi = [
-        {
-            "id": 1,
-            "atasNama": "Rizky",
-            "jumlah": 2,
-            "tanggal": "2022-12-12",
-            "idPelayan": 1,
-            "status": "waiting",
-            "noHp": "0123412341"
-        },
-        {
-            "id": 2,
-            "atasNama": "Rizky",
-            "jumlah": 2,
-            "tanggal": "2022-12-12",
-            "idPelayan": 1,
-            "status": "waiting",
-            "noHp": "0123412341"
-        },
-        {
-            "id": 3,
-            "atasNama": "Rizky",
-            "jumlah": 2,
-            "tanggal": "2022-12-12",
-            "idPelayan": 1,
-            "status": "waiting",
-            "noHp": "0123412341"
-        },
-        {
-            "id": 4,
-            "atasNama": "Rizky",
-            "jumlah": 2,
-            "tanggal": "2022-12-12",
-            "idPelayan": 1,
-            "status": "ontable",
-            "noHp": "0123412341"
-        }
-    ];
-
     const getDataWaiting = async () => {
         const {data} = await fetchApi("/reservasi", "GET");
 
@@ -100,13 +61,6 @@ export default function TableWaiting({querySearch}:any) {
         modal.onOpen();
       };
 
-    // useEffect(() => {
-    //     const waitingData = dataReservasi.filter((item: any) =>
-    //         item.status === "waiting"
-    //     );
-
-    //     setData(waitingData);
-    // }, [])
 
     useEffect(()=>{
         getDataWaiting();
@@ -114,7 +68,7 @@ export default function TableWaiting({querySearch}:any) {
 
     useEffect(() => {
     const filteredData = data.filter((item: any) =>
-        item.atasNama.toLowerCase().includes(querySearch.toLowerCase())
+        item.atas_nama.toLowerCase().includes(querySearch.toLowerCase())
     );
 
     setSearchData(filteredData);
