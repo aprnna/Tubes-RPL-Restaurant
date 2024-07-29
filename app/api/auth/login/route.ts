@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     case 'manager':
       redirectTo = '/admin';
       break;
-    case 'kasir':
+    case 'pelayan':
       redirectTo = '/pesanan/add';
       break;
     case 'koki':
@@ -39,9 +39,6 @@ export async function POST(req: NextRequest) {
       break;
     case 'karyawan':
       redirectTo = '/bahan_baku';
-      break;
-    case 'pelayan':
-      redirectTo = '/reservasi';
       break;
   }
 
