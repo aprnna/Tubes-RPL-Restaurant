@@ -31,11 +31,12 @@ export default function Page() {
       role: formData.get("role"),
     };
 
-    const { data: dataUser } = await fetchApi("/users", "POST", data);
+    const response = await fetchApi("/users", "POST", data);
 
     setLoading(false);
     modal.onClose();
-    if (dataUser.status === 400) return toast.error("GAGAL REGISTER");
+    if (response.status === 400) return toast.error("GAGAL REGISTER");
+    window.location.reload();
 
     return toast.success("BERHASIL REGISTER");
   }

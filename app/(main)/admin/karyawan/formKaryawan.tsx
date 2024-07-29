@@ -32,8 +32,8 @@ export default function FormKaryawan({
       value: "koki",
     },
     {
-      label: "Kasir",
-      value: "kasir",
+      label: "Pelayan",
+      value: "pelayan",
     },
   ];
 
@@ -85,7 +85,6 @@ export default function FormKaryawan({
         onChange={(e) => setData({ ...data, no_telp: e.target.value })}
       />
       <Select
-        className="max-w-xs"
         items={roles}
         label="Roles"
         name="role"

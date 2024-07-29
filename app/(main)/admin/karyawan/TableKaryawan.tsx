@@ -135,11 +135,11 @@ export default function TableKaryawan({ querySearch }: any) {
             isOpen={modal2.isOpen}
             onOpenChange={modal2.onOpenChange}
             btnActionTitle="Delete"
-            title="Delete Menu"
+            title="Delete Karyawan"
             loading={loadingDelete}
             submit={handleDeleteSubmit}
           >
-            <h1>Are you sure want to delete this menu?</h1>
+            <h1>Are you sure want to delete this karyawan?</h1>
           </Modal>
         </>
       )}
