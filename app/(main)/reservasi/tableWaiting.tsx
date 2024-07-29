@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Modal from "@/components/modal2";
 import { useDisclosure } from "@nextui-org/modal";
 import FormReservasi from './formReservasi';
+import fetchApi from '@/utils/fetchApi';
 
 interface EditDataWaiting {
     id: number;
@@ -34,11 +35,11 @@ export default function TableWaiting({querySearch}:any) {
 
 
     const columns = [
-        { key: "atasNama", label: "Atas Nama" },
-        { key: "jumlah", label: "Jumlah Orang" },
+        { key: "atas_nama", label: "Atas Nama" },
+        { key: "banyak_orang", label: "Jumlah Orang" },
         { key: "tanggal", label: "Tanggal Reservasi" },
-        { key: "idPelayan", label: "ID Pelayan" },
-        { key: "noHp", label: "Nomor Handphone" },
+        { key: "id_user", label: "ID Pelayan" },
+        { key: "no_telp", label: "Nomor Handphone" },
         { key: "action", label: "Action" },
       ];
 
@@ -81,6 +82,16 @@ export default function TableWaiting({querySearch}:any) {
         }
     ];
 
+    const getDataWaiting = async () => {
+        const {data} = await fetchApi("/reservasi", "GET");
+
+        const filteredData = data.filter((item:any)=>
+            item.status === "waiting"
+        );
+
+        setData(filteredData);
+    };
+
     const handleEdit = async (id: number) => {
         console.log("Edit item with id:", id);
         const dataEdit = data.find((item: any) => item.id === id);
@@ -89,13 +100,17 @@ export default function TableWaiting({querySearch}:any) {
         modal.onOpen();
       };
 
-    useEffect(() => {
-        const waitingData = dataReservasi.filter((item: any) =>
-            item.status === "waiting"
-        );
+    // useEffect(() => {
+    //     const waitingData = dataReservasi.filter((item: any) =>
+    //         item.status === "waiting"
+    //     );
 
-        setData(waitingData);
-    }, [])
+    //     setData(waitingData);
+    // }, [])
+
+    useEffect(()=>{
+        getDataWaiting();
+    },[])
 
     useEffect(() => {
     const filteredData = data.filter((item: any) =>
