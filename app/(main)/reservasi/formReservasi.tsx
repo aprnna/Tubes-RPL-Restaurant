@@ -1,40 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
+import { get } from "http";
+import fetchApi from "@/utils/fetchApi";
 export default function FormReservasi({ initialData }: { initialData?: any }) {
   let { atasNama, jumlah, noHp, noMeja} = initialData || {};
   const [data, setData] = useState({
     atasNama: atasNama || "",
     jumlah: jumlah || "",
     noHp: noHp || "",
-    noMeja: noMeja || "",
+    noMeja: noMeja || null,
   });
-  const satuanList = [
-    {
-      key: 1,
-      label: "Meja 1",
-    },
-    {
-      key: 2,
-      label: "Meja 2",
-    },
-    {
-      key: 3,
-      label: "Meja 3",
-    },
-    {
-      key: 4,
-      label: "Meja 4",
-    },
-    {
-      key: 5,
-      label: "Meja 5",
-    },
-    {
-      key: 6,
-      label: "Meja 6",
-    },
-  ];
+
+  const [meja, setMeja] = useState([]);
+
+  const getMeja = async () => {
+    const {data} = await fetchApi("/meja", "GET");
+
+    const filteredData = data.filter((item: any) =>
+      item.status == "Available"
+    );
+
+    const sortedData = filteredData.sort((a: any, b: any) => a.no_meja - b.no_meja);
+
+    setMeja(sortedData);
+  }
+
+  useEffect(()=>{
+    getMeja();
+  },[])
+
+
+  const handleSelectChange = (key: any) => {
+    setData(prevData => ({
+      ...prevData,
+      noMeja: key,
+    }));
+  };
 
   return (
     <>
@@ -56,6 +58,7 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
           onChange={(e) => setData({ ...data, jumlah: e.target.value })}
           placeholder="Masukan Jumlah Orang"
           size="lg"
+          type="number"
         />
         <Input
           label="Nomor HandPhone"
@@ -72,13 +75,14 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
           label="Nomor Meja"
           labelPlacement="outside"
           name="noMeja"
-          defaultSelectedKeys={[`${data.noMeja}`]}
-          onChange={(e) => setData({ ...data, noMeja: e.target.value })}
+          // defaultSelectedKeys={[data.noMeja]}
+          selectedKeys={data.noMeja}
+          onChange={()=>handleSelectChange}
           placeholder="Nomor Meja"
           size="lg"
         >
-          {satuanList.map((satuan) => (
-            <SelectItem key={satuan.key}>{satuan.label}</SelectItem>
+          {meja.map((item:any) => (
+            <SelectItem key={item.no_meja} textValue={item.no_meja}>{item.no_meja}</SelectItem>
           ))}
         </Select>
     </>

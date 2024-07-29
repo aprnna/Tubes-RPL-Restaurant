@@ -25,7 +25,7 @@ export default function TableDetails({table, onClear}:any) {
                       disabled
                       className="text-end bg-white font-medium"
                       type="text"
-                      value={table.id}
+                      value={table.no_meja}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -33,8 +33,8 @@ export default function TableDetails({table, onClear}:any) {
                     <input
                       disabled
                       className="text-end bg-white font-medium"
-                      type="number"
-                      value={table.capacity}
+                      type="text"
+                      value={table.kapasitas}
                     />
                   </div>
                   <div className="flex justify-between">

@@ -72,7 +72,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setDateTime(dateTime);
   };
 
-  const emptyCart = (item:CartItem[]) =>{
+  const emptyCart = () =>{
     setCart([]);
   }
 

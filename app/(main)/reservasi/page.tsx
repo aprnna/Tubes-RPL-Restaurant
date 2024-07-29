@@ -10,6 +10,8 @@ import FormReservasi from './formReservasi';
 import TableCards from './tableCards';
 import TableDetails from './tableDetails';
 import TableWaiting from './tableWaiting';
+import { toast } from 'react-toastify';
+import fetchApi from '@/utils/fetchApi';
 
 
 export default function Page() {
@@ -20,8 +22,32 @@ export default function Page() {
 
     const handleTableClick = (table: any) => {
         setSelectedTable(table);
-      };
+    };
 
+      async function handleSubmit(e: any) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+          atasNama: formData.get("atasNama"),
+          jumlahOrang: formData.get("jumlahOrang"),
+          nomorHp: formData.get("nomorHp"),
+          noMeja: formData.get("noMeja") || null,
+        };
+    
+        setLoading(true);
+            const response = await fetchApi("/reservasi", "POST", data);
+        
+            if (response.status == 201)
+            toast.success("Berhasil membuat reservasi");
+            else if (response.status == 400)
+            toast.error("Jumlah Orang Melebihi Kapasitas");
+            else toast.error("Gagal membuat reservasi");
+        setLoading(false);
+        if (response.status == 201){
+            modal.onClose();
+            window.location.reload();
+        }
+      }
 
     return (
         <div className="w-full h-screen bg-slate-50 flex flex-col">
@@ -36,6 +62,7 @@ export default function Page() {
                 // submit={handleSubmit}
                 title="Penambahan Reservasi"
                 onOpenChange={modal.onOpenChange}
+                submit={handleSubmit}
                 sizeModal="xl"
             >
                 <FormReservasi />

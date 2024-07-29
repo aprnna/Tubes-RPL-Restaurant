@@ -4,7 +4,7 @@ import { NextRequest} from 'next/server'
 
 export async function GET() {
     const supabase = createClient()
-    const { data: meja } = await supabase.from('table').select()
+    const { data: meja } = await supabase.from('meja').select()
   
     return getResponse(meja, 'Pesanan fetched successfully', 200)
   }
