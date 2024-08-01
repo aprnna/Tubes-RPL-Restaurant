@@ -6,7 +6,6 @@ import { NextRequest} from 'next/server'
 export async function GET() {
   const supabase = createClient();
   
-  // Mengambil data dari tabel pesanan dan melakukan join dengan tabel reservasi
   const { data: pesananData, error } = await supabase
     .from('pesanan')
     .select(`
@@ -17,7 +16,7 @@ export async function GET() {
       status, 
       id_reservasi,
       reservasi2(atas_nama, banyak_orang)
-    `).eq('reservasi2.status', 'ontable');
+    `)
     
   if (error) {
     return getResponse(null, 'Error fetching pesanan', 500);

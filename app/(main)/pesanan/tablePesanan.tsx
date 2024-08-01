@@ -24,7 +24,7 @@ export default function TablePesanan() {
     setLoading(true);
     const { data } = await fetchApi("/pesanan", "GET");
 
-    setMenu(data);
+    setMenu(data || null);
     setLoading(false);
   }
 
