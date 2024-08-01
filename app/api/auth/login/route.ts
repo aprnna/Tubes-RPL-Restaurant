@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       redirectTo = '/admin';
       break;
     case 'pelayan':
-      redirectTo = '/pesanan/add';
+      redirectTo = '/reservasi';
       break;
     case 'koki':
       redirectTo = '/pesanan/ongoing';

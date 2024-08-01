@@ -82,7 +82,7 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
           size="lg"
         >
           {meja.map((item:any) => (
-            <SelectItem key={item.no_meja} textValue={item.no_meja}>{item.no_meja}</SelectItem>
+            <SelectItem key={item.no_meja} textValue={item.no_meja}>Meja {item.no_meja}, Max {item.kapasitas}</SelectItem>
           ))}
         </Select>
     </>

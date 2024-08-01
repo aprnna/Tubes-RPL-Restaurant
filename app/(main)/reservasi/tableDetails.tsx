@@ -1,17 +1,23 @@
 import { Button } from '@/components/Button'
+import { Loading } from '@/components/loading';
 import fetchApi from '@/utils/fetchApi';
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
 
 export default function TableDetails({table, onClear}:any) {
 
   const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
 
   const getData = async () => {
+    setLoading(true);
     const {data} = await fetchApi(`/meja/${table.no_meja}`, "GET")
 
     setData(data);
+    setLoading(false);
   };
 
   const formatDateTimeLocal = (timestamp:string) => {
@@ -25,6 +31,19 @@ export default function TableDetails({table, onClear}:any) {
       const minutes = pad(date.getMinutes());
 
       return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const handleClear = async () => {
+    const response = await fetchApi(`/meja/${table.no_meja}`, "PUT");
+
+    if (response.status == 200)
+      toast.success("Berhasil update meja dan reservasi");
+    else toast.error("Gagal update meja dan reservasi");
+
+    if (response.status == 200){
+      onClear();
+      window.location.reload();
+    }
   };
 
 
@@ -48,6 +67,10 @@ export default function TableDetails({table, onClear}:any) {
             <div className="bg-white mr-12 items-center justify-center rounded-lg py-4 px-6">
               <h1 className="font-bold text-2xl">Detail Meja</h1>
               <div className="flex flex-col gap-1 pt-1.5 text-sm text-gray-600">
+              {loading ? (
+                    <Loading />
+                  ) : (
+                    <>
                   <div className="flex justify-between">
                     <h4>No Meja</h4>
                     <input
@@ -66,59 +89,68 @@ export default function TableDetails({table, onClear}:any) {
                       value={table.kapasitas}
                     />
                   </div>
-                  {data.reservasi ? (
-                    <>
-                      {data.reservasi.map((reservasi: any) => (
-                        <div key={reservasi.id}>
-                          <div className="flex justify-between">
-                            <h4>Atas Nama</h4>
-                            <input
-                              disabled
-                              className="text-end bg-white font-medium"
-                              type="text"
-                              value={reservasi.atas_nama}
-                            />
-                          </div>
-                          <div className="flex justify-between">
-                            <h4>Jumlah Orang</h4>
-                            <input
-                              disabled
-                              className="text-end bg-white font-medium"
-                              type="text"
-                              value={reservasi.banyak_orang}
-                            />
-                          </div>
-                          <div className="flex justify-between">
-                            <h4>Tanggal Reservasi</h4>
-                            <input
-                              disabled
-                              className="text-end bg-white w-[200px] font-medium"
-                              type="text"
-                              value={formatDateTimeLocal(reservasi.tanggal)}
-                            />
-                          </div>
-                          <div className="flex justify-between">
-                            <h4>ID Pelayan</h4>
-                            <input
-                              disabled
-                              className="text-end bg-white font-medium"
-                              type="text"
-                              value={reservasi.id_user}
-                            />
-                          </div>
-                        </div>
-                      ))}
+                 
+                      {data.reservasi ? (
+                        <>
+                          {data.reservasi.map((reservasi: any) => (
+                            <div key={reservasi.id}>
+                              <div className="flex justify-between">
+                                <h4>Atas Nama</h4>
+                                <input
+                                  disabled
+                                  className="text-end bg-white font-medium"
+                                  type="text"
+                                  value={reservasi.atas_nama}
+                                />
+                              </div>
+                              <div className="flex justify-between">
+                                <h4>Jumlah Orang</h4>
+                                <input
+                                  disabled
+                                  className="text-end bg-white font-medium"
+                                  type="text"
+                                  value={reservasi.banyak_orang}
+                                />
+                              </div>
+                              <div className="flex justify-between">
+                                <h4>Tanggal Reservasi</h4>
+                                <input
+                                  disabled
+                                  className="text-end bg-white w-[200px] font-medium"
+                                  type="text"
+                                  value={formatDateTimeLocal(reservasi.tanggal)}
+                                />
+                              </div>
+                              <div className="flex justify-between">
+                                <h4>ID Pelayan</h4>
+                                <input
+                                  disabled
+                                  className="text-end bg-white font-medium"
+                                  type="text"
+                                  value={reservasi.id_user}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      ):(
+                        <></>
+                      )}
                     </>
-                  ):(
-                    <></>
                   )}
               </div>
               <div className="w-full border-t-2 border-dashed border-gray-400 my-4" />
-                {table.status == 'Full'?(
-                  <Button className='w-full' onPress={onClear}>Kosongkan</Button>
-                ):(
-                  <p>Tidak Ada Reservasi di Meja Ini</p>
-                )}
+              {loading ? (
+                <></>
+              ):(
+                <>
+                  {table.status == 'Full'?(
+                    <Button className='w-full' onPress={handleClear}>Kosongkan</Button>
+                  ):(
+                    <p className='font-medium'>Tidak ada reservasi di meja ini</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
           </motion.div>

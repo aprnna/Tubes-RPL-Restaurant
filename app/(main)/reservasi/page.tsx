@@ -24,7 +24,7 @@ export default function Page() {
         setSelectedTable(table);
     };
 
-      async function handleSubmit(e: any) {
+    async function handleSubmit(e: any) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
@@ -36,11 +36,12 @@ export default function Page() {
     
         setLoading(true);
             const response = await fetchApi("/reservasi", "POST", data);
-        
+            
+            
             if (response.status == 201)
-            toast.success("Berhasil membuat reservasi");
+                toast.success("Berhasil membuat reservasi");
             else if (response.status == 400)
-            toast.error("Jumlah Orang Melebihi Kapasitas");
+                toast.error(response.message);
             else toast.error("Gagal membuat reservasi");
         setLoading(false);
         if (response.status == 201){

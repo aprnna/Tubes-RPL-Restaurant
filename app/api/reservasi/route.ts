@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   if (errorAuth) return getResponse(errorAuth, 'error get user', 500)
 
 
-  const { data: bahan_baku, error } = await supabase.from('reservasi2').insert({
+  const { data: reservasi, error } = await supabase.from('reservasi2').insert({
     id_user: user?.id,
     no_meja: noMeja,
     status: status,
@@ -71,5 +71,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return getResponse(bahan_baku, 'Bahan insert successfully', 201)
+  return getResponse(reservasi, 'Bahan insert successfully', 201)
 }
