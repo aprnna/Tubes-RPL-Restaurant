@@ -4,6 +4,17 @@ import fetchApi from "@/utils/fetchApi";
 import Table from "@/components/table";
 import { useCart } from "./allContext";
 
+// interface Pesanan {
+//   id: number;
+//   id_user: number;
+//   no_meja: number;
+//   createdAt: string;
+//   total_harga: number;
+//   status: string;
+//   atas_nama: string;
+//   banyak_orang: number;
+// }
+
 export default function TablePesanan() {
   const [pesanan, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +34,7 @@ export default function TablePesanan() {
 
   const columns = [
     { key: "id", label: "Id Nota" },
-    { key: "atasNama", label: "Atas Nama" },
+    { key: "atas_nama", label: "Atas Nama", render: (row:any) => row.reservasi2?.atas_nama },
     { key: "banyak_orang", label: "Banyak Orang" },
     { key: "createdAt", label: "Dibuat" },
     { key: "status", label: "Status" },
@@ -31,7 +42,7 @@ export default function TablePesanan() {
 
   const filteredPesanan = pesanan.filter(
     (item: any) =>
-      item.atasNama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.atas_nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.createdAt.toString().includes(searchQuery)
   );
 

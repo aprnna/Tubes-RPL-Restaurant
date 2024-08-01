@@ -10,6 +10,13 @@ import { toast } from "react-toastify";
 interface userData {
   id: number;
 }
+
+interface Meja {
+  no_meja: number;
+  kapasitas: number;
+  status: string;
+}
+
 export const OrderDetails = (): JSX.Element => {
   const { cart, dateTime, updateDateTime, emptyCart } = useCart();
   const [lastId, setLastID] = useState("");
@@ -20,6 +27,8 @@ export const OrderDetails = (): JSX.Element => {
   const [nama, setNama] = useState("");
   const [jumlahOrang, setJumlahOrang] = useState(1);
   const [noMeja, setNoMeja] = useState(1);
+  const [mejaList, setMejaList] = useState<Meja[]>([]);
+  const [idReservasi, setIdReservasi] = useState(0);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     updateDateTime(event.target.value);
@@ -35,9 +44,9 @@ export const OrderDetails = (): JSX.Element => {
     setJumlahOrang(Number(event.target.value));
   };
 
-  const handleChangeNoMeja = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNoMeja(Number(event.target.value));
-  };
+  // const handleChangeNoMeja = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNoMeja(Number(event.target.value));
+  // };
 
   const handleBayar = () => {
     if (!nama || jumlahOrang < 1) {
@@ -70,8 +79,33 @@ export const OrderDetails = (): JSX.Element => {
     setUser(data);
   }
 
+  async function getMejaList() {
+    const { data } = await fetchApi("/meja", "GET");
+
+    const filteredData = data.filter((meja: Meja) => meja.status === 'Full');
+    const sortedData = filteredData.sort((a: any, b: any) => a.no_meja - b.no_meja);
+
+
+    setMejaList(sortedData);
+  }
+
+  async function handleMejaChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedMeja = Number(event.target.value);
+
+    setNoMeja(selectedMeja);
+    
+    const { data } = await fetchApi(`/meja/${selectedMeja}`, "GET");
+
+    if (data.reservasi) {
+      setNama(data.reservasi[0].atas_nama);
+      setJumlahOrang(data.reservasi[0].banyak_orang);
+      setIdReservasi(data.reservasi[0].id);
+    }
+  }
+
   async function sendOrder() {
     const orderData = {
+      idReservasi: idReservasi,
       atasNama: nama,
       banyak_orang: jumlahOrang,
       no_meja: noMeja,
@@ -105,6 +139,7 @@ export const OrderDetails = (): JSX.Element => {
   useEffect(() => {
     getUser();
     getLastId();
+    getMejaList();
   }, []);
 
   return (
@@ -138,7 +173,6 @@ export const OrderDetails = (): JSX.Element => {
                       placeholder="Masukan Nama"
                       type="text"
                       value={nama}
-                      onChange={handleChangeNama}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -149,7 +183,6 @@ export const OrderDetails = (): JSX.Element => {
                       placeholder="1"
                       type="number"
                       value={jumlahOrang}
-                      onChange={handleChangeJumlahOrang}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -168,17 +201,23 @@ export const OrderDetails = (): JSX.Element => {
                       disabled
                       className="text-end bg-white font-medium"
                       type="text"
-                      value={user?.id.toString().split("-")[0]}
+                      value={user?.id.toString()}
                     />
                   </div>
                   <div className="flex justify-between">
                     <h4>No Meja</h4>
-                    <input
+                    <select
                       className="text-end bg-white font-medium"
-                      type="number"
                       value={noMeja}
-                      onChange={handleChangeNoMeja}
-                    />
+                      onChange={handleMejaChange}
+                    >
+                      <option value="">-- Pilih Meja --</option>
+                      {mejaList.map((meja) => (
+                        <option key={meja.no_meja} value={meja.no_meja}>
+                          {meja.no_meja}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="flex flex-col mt-2 lg:min-h-28 lg:max-h-20 2xl:max-h-64">

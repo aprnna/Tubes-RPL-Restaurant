@@ -32,6 +32,8 @@ export async function GET(req:NextRequest,{params}:any) {
         reservasi: reservasi.length > 0 ? reservasi : null
     };
 
+    console.log(responseData);
+
     return getResponse(responseData, 'Data fetched successfully', 200);
 }
 

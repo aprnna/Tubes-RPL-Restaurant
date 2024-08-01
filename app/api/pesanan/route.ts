@@ -4,11 +4,37 @@ import { Anybody } from 'next/font/google'
 import { NextRequest} from 'next/server'
 
 export async function GET() {
-  const supabase = createClient()
-  const { data: pesanan } = await supabase.from('pesanan').select()
-
-  return getResponse(pesanan, 'Pesanan fetched successfully', 200)
+  const supabase = createClient();
   
+  // Mengambil data dari tabel pesanan dan melakukan join dengan tabel reservasi
+  const { data: pesananData, error } = await supabase
+    .from('pesanan')
+    .select(`
+      id, 
+      no_meja, 
+      createdAt, 
+      total_harga, 
+      status, 
+      id_reservasi,
+      reservasi2(atas_nama, banyak_orang)
+    `).eq('reservasi2.status', 'ontable');
+    
+  if (error) {
+    return getResponse(null, 'Error fetching pesanan', 500);
+  }
+
+  const pesanan = pesananData.map((item:any) => ({
+    id: item.id,
+    no_meja: item.no_meja,
+    createdAt: item.createdAt,
+    total_harga: item.total_harga,
+    status: item.status,
+    id_reservasi: item.id_reservasi,
+    atas_nama: item.reservasi2.atas_nama,
+    banyak_orang: item.reservasi2.banyak_orang,
+  }));
+  
+  return getResponse(pesanan, 'Pesanan fetched successfully', 200);
 }
 
 export async function POST(req: NextRequest) {
@@ -16,16 +42,15 @@ export async function POST(req: NextRequest) {
     const {data:{user}, error:errorAuth} = await supabase.auth.getUser()
 
     if(errorAuth) return getResponse(errorAuth,"failed to get user data", 400)
-    const {atasNama, banyak_orang,no_meja, status, total_harga, id_users, items} = await req.json();
+    const {idReservasi, atasNama, banyak_orang,no_meja, status, total_harga, id_users, items} = await req.json();
     // const data = await req.formData()
     const { data: pesananBaru,error} = await supabase.from('pesanan').insert
     ([{
-        atasNama: atasNama,
-        banyak_orang: banyak_orang,
         no_meja: no_meja,
         status: status,
         total_harga: total_harga,
-        id_users: user?.id,
+        id_user: user?.id,
+        id_reservasi: idReservasi,
     }]).select()
 
     if (error) {
