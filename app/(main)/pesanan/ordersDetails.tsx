@@ -7,6 +7,8 @@ import Modal from "@/components/modal";
 import fetchApi from "@/utils/fetchApi";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { toast } from "react-toastify";
+import { Loading } from "@/components/loading";
+import { Button } from "@/components/Button";
 interface userData {
   id: number;
 }
@@ -26,9 +28,11 @@ export const OrderDetails = (): JSX.Element => {
   const [user, setUser] = useState<userData>();
   const [nama, setNama] = useState("");
   const [jumlahOrang, setJumlahOrang] = useState(1);
-  const [noMeja, setNoMeja] = useState(1);
+  const [noMeja, setNoMeja] = useState(0);
   const [mejaList, setMejaList] = useState<Meja[]>([]);
   const [idReservasi, setIdReservasi] = useState(0);
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     updateDateTime(event.target.value);
@@ -94,6 +98,7 @@ export const OrderDetails = (): JSX.Element => {
 
     setNoMeja(selectedMeja);
     
+    setLoading(true);
     const { data } = await fetchApi(`/meja/${selectedMeja}`, "GET");
 
     if (data.reservasi) {
@@ -101,6 +106,7 @@ export const OrderDetails = (): JSX.Element => {
       setJumlahOrang(data.reservasi[0].banyak_orang);
       setIdReservasi(data.reservasi[0].id);
     }
+    setLoading(false);
   }
 
   async function sendOrder() {
@@ -117,10 +123,12 @@ export const OrderDetails = (): JSX.Element => {
       })),
     };
 
+    setLoading(true);
     const response = await fetchApi("/pesanan", "POST", orderData);
 
     if (response.status === 200) {
       handlerGetlastID();
+      setLoading(false);
     } else {
       console.error("Failed to send order", response);
     }
@@ -130,7 +138,7 @@ export const OrderDetails = (): JSX.Element => {
     setShowMainModal(false);
     setNama("");
     setJumlahOrang(1);
-    setNoMeja(1);
+    setNoMeja(0);
     emptyCart(cart);
     getLastId();
     toast.success("Pesanan Berhasil Dibuat");
@@ -166,44 +174,52 @@ export const OrderDetails = (): JSX.Element => {
                       value={lastId}
                     />
                   </div>
-                  <div className="flex justify-between">
-                    <h4>Atas Nama</h4>
-                    <input
-                      className="text-end bg-white font-medium"
-                      placeholder="Masukan Nama"
-                      type="text"
-                      value={nama}
-                    />
-                  </div>
-                  <div className="flex justify-between">
-                    <h4>Jumlah Orang</h4>
-                    <input
-                      className="text-end bg-white font-medium"
-                      min={1}
-                      placeholder="1"
-                      type="number"
-                      value={jumlahOrang}
-                    />
-                  </div>
-                  <div className="flex justify-between">
-                    <h4>Tanggal Pesanan</h4>
-                    <input
-                      disabled
-                      className="text-end bg-white font-medium"
-                      type="timestamp"
-                      value={dateTime}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex justify-between">
-                    <h4>ID Kasir</h4>
-                    <input
-                      disabled
-                      className="text-end bg-white font-medium"
-                      type="text"
-                      value={user?.id.toString()}
-                    />
-                  </div>
+                  {loading ? (
+                    <Loading />
+                  ) : (
+                    <>
+                      <div className="flex justify-between">
+                        <h4>Atas Nama</h4>
+                        <input
+                          disabled
+                          className="text-end bg-white font-medium"
+                          placeholder="Masukan Nama"
+                          type="text"
+                          value={nama}
+                        />
+                      </div>
+                      <div className="flex justify-between">
+                        <h4>Jumlah Orang</h4>
+                        <input
+                          disabled
+                          className="text-end bg-white font-medium"
+                          min={1}
+                          placeholder="1"
+                          type="number"
+                          value={jumlahOrang}
+                        />
+                      </div>
+                      <div className="flex justify-between">
+                        <h4>Tanggal Pesanan</h4>
+                        <input
+                          disabled
+                          className="text-end bg-white font-medium"
+                          type="timestamp"
+                          value={dateTime}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="flex justify-between">
+                        <h4>ID Kasir</h4>
+                        <input
+                          disabled
+                          className="text-end bg-white font-medium"
+                          type="text"
+                          value={user?.id.toString()}
+                        />
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between">
                     <h4>No Meja</h4>
                     <select
@@ -211,7 +227,7 @@ export const OrderDetails = (): JSX.Element => {
                       value={noMeja}
                       onChange={handleMejaChange}
                     >
-                      <option value="">-- Pilih Meja --</option>
+                      <option selected>-- Pilih Meja --</option>
                       {mejaList.map((meja) => (
                         <option key={meja.no_meja} value={meja.no_meja}>
                           {meja.no_meja}
@@ -262,12 +278,17 @@ export const OrderDetails = (): JSX.Element => {
                   <h4>Total</h4>
                   <h4 className="font-bold">{formatCurrency(total)}</h4>
                 </div>
-                <button
+                {/* <button
                   className="bg-amber-950 text-slate-50 py-3 px-5 w-full rounded-lg mt-4 hover:bg-amber-900 transition-all duration-300"
                   onClick={() => handleBayar()}
                 >
                   Bayar
-                </button>
+                </button> */}
+                <Button
+                  isLoading={loading}
+                  onClick={()=> handleBayar()}
+                  className="bg-amber-950 text-slate-50 py-3 px-5 w-full rounded-lg mt-4 hover:bg-amber-900 transition-all duration-300"
+                >Bayar</Button>
               </div>
             </div>
           </motion.div>
@@ -281,7 +302,7 @@ export const OrderDetails = (): JSX.Element => {
         >
           <h2 className="text-2xl font-bold mb-4">Alert</h2>
           <div className="w-full border-t-2 border-dashed border-gray-400 my-4" />
-          <p>Silakan isi dahulu nama dan jumlah orangnya.</p>
+          <p>Silakan isi pilih meja dahulu.</p>
           <button
             className="bg-amber-950 text-slate-50 py-3 px-5 w-full rounded-lg mt-8 hover:bg-amber-900 transition-all duration-300"
             onClick={() => setShowAlertModal(false)}
@@ -350,12 +371,17 @@ export const OrderDetails = (): JSX.Element => {
             </div>
           </div>
           <div className="min-w-96 border-t-2 border-dashed border-gray-400 my-3" />
-          <button
+          {/* <button
             className="bg-amber-950 text-slate-50 py-3 px-5 w-full rounded-lg mt-2 hover:bg-amber-900 transition-all duration-300"
             onClick={() => sendOrder()}
           >
             Cetak Nota
-          </button>
+          </button> */}
+          <Button
+                  isLoading={loading}
+                  onClick={()=> sendOrder()}
+                  className="bg-amber-950 text-slate-50 py-3 px-5 w-full rounded-lg mt-4 hover:bg-amber-900 transition-all duration-300"
+                >Cetak Nota</Button>
         </Modal>
       )}
     </AnimatePresence>
