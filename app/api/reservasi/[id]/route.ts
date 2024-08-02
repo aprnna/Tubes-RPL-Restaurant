@@ -46,7 +46,7 @@ export async function PUT(req:NextRequest,{params}:any) {
   if (errorAuth) return getResponse(errorAuth, 'error get user', 500)
   
   console.log(atasNama, jumlahOrang, noMeja, nomorHp, id);
-  const { data: reservasi, error } = await supabase.from('reservasi2').update([{
+  const { data: reservasi, error } = await supabase.from('reservasi').update([{
     id_user: user?.id,
     no_meja: noMeja,
     status: status,

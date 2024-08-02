@@ -18,7 +18,7 @@ export async function GET(req:NextRequest,{params}:any) {
     }
 
     const { data: reservasi, error: reservasiError } = await supabase
-        .from('reservasi2')
+        .from('reservasi')
         .select()
         .eq('no_meja', meja.no_meja)
         .eq('status', 'ontable');
@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest, { params }: any) {
     }
 
     const { data: reservasi, error: reservasiError } = await supabase
-        .from('reservasi2')
+        .from('reservasi')
         .update({status: "done"})
         .eq('no_meja', meja.no_meja)
         .eq('status', 'ontable').select();

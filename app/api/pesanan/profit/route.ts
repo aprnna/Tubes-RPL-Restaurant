@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server';
 export async function POST(req: NextRequest) {
   const supabase = createClient()
   const { start, end } = await req.json()
-  const { data: pesanan,error } = await supabase.from('pesanan').select('total_harga, status, createdAt, updateAt, reservasi2 (banyak_orang)').eq('status', 'selesai').gte('createdAt', start).lte('createdAt', end);
+  const { data: pesanan,error } = await supabase.from('pesanan').select('total_harga, status, createdAt, updateAt, reservasi (banyak_orang)').eq('status', 'selesai').gte('createdAt', start).lte('createdAt', end);
   let profit = 0
   let banyakPelanggan = 0
   let totalDifferenceInMinutes = 0;  
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     updateAt: item.updateAt,
     total_harga: item.total_harga,
     status: item.status,
-    banyak_orang: item.reservasi2.banyak_orang,
+    banyak_orang: item.reservasi.banyak_orang,
   }));
     
   console.log(pesananData);

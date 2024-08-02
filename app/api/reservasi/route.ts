@@ -5,7 +5,7 @@ import { NextRequest } from "next/server"
 
 export async function GET() {
     const supabase = createClient()
-    const { data: reservasi } = await supabase.from('reservasi2').select()
+    const { data: reservasi } = await supabase.from('reservasi').select()
   
     return getResponse(reservasi, 'Pesanan fetched successfully', 200)
   }
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   if (errorAuth) return getResponse(errorAuth, 'error get user', 500)
 
 
-  const { data: reservasi, error } = await supabase.from('reservasi2').insert({
+  const { data: reservasi, error } = await supabase.from('reservasi').insert({
     id_user: user?.id,
     no_meja: noMeja,
     status: status,

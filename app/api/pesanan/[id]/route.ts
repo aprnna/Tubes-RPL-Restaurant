@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 export async function GET(req:NextRequest,{params}:any) {
     const supabase = createClient();
     const {id} = params
-    const {data:orderData, error: orderError} = await supabase.from('pesanan').select('id, id_user, createdAt, reservasi2 (atas_nama, banyak_orang)').eq('id',id)
+    const {data:orderData, error: orderError} = await supabase.from('pesanan').select('id, id_user, createdAt, reservasi (atas_nama, banyak_orang)').eq('id',id)
     const {data:items, error: itemsError} = await supabase.from('item_pesanan').select().eq('id_pesanan',id)
     const menuIds = items!.map(item => item.id_menu);
     const {data:menuDetails, error: menuError} = await supabase.from('menu').select().in('id',menuIds)
@@ -20,8 +20,8 @@ export async function GET(req:NextRequest,{params}:any) {
         id: item.id,
         id_user: item.id_user,
         createdAt: item.createdAt,
-        atas_nama: item.reservasi2.atas_nama,
-        banyak_orang: item.reservasi2.banyak_orang,
+        atas_nama: item.reservasi.atas_nama,
+        banyak_orang: item.reservasi.banyak_orang,
     }));
       
     

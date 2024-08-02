@@ -15,7 +15,7 @@ export async function GET() {
       total_harga, 
       status, 
       id_reservasi,
-      reservasi2(atas_nama, banyak_orang)
+      reservasi(atas_nama, banyak_orang)
     `)
     
   if (error) {
@@ -29,8 +29,8 @@ export async function GET() {
     total_harga: item.total_harga,
     status: item.status,
     id_reservasi: item.id_reservasi,
-    atas_nama: item.reservasi2.atas_nama,
-    banyak_orang: item.reservasi2.banyak_orang,
+    atas_nama: item.reservasi.atas_nama,
+    banyak_orang: item.reservasi.banyak_orang,
   }));
   
   return getResponse(pesanan, 'Pesanan fetched successfully', 200);
