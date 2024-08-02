@@ -28,21 +28,21 @@ export async function POST(req: NextRequest) {
     profit += item.total_harga
     banyakPelanggan += item.banyak_orang
 
-    //bug disini ketika ambil mengubah createAt menjadi ISO
-    
-    // const createdAt = parseISO(item.createdAt);
-    // const updatedAt = parseISO(item.updatedAt);
-    // const differenceInMinutess = differenceInMinutes(updatedAt, createdAt);
+    // bug disini ketika ambil mengubah createAt menjadi ISO
 
-    // totalDifferenceInMinutes += differenceInMinutess; 
+    const createdAt = parseISO(item.createdAt);
+    const updatedAt = parseISO(item.updateAt);
+    const differenceInMinutess = differenceInMinutes(updatedAt, createdAt);
+
+    totalDifferenceInMinutes += differenceInMinutess; 
   })
 
-  // rataRataPesananSelesaiDalamJam = totalDifferenceInMinutes / pesanan?.length / 60; 
+  rataRataPesananSelesaiDalamJam = totalDifferenceInMinutes / pesanan?.length / 60; 
 
   const data = {
     profit: profit,
     banyakPelanggan: banyakPelanggan,
-    // rataRataPesananSelesaiDalamJam: rataRataPesananSelesaiDalamJam 
+    rataRataPesananSelesaiDalamJam: rataRataPesananSelesaiDalamJam 
   }
 
   console.log(data);
