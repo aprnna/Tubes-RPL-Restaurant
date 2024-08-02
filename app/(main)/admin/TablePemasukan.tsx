@@ -22,7 +22,7 @@ export default function TablePemasukan() {
 
   const columns = [
     { key: "id", label: "Id Nota" },
-    { key: "atasNama", label: "Atas Nama" },
+    { key: "atas_nama", label: "Atas Nama" },
     { key: "banyak_orang", label: "Banyak Orang" },
     { key: "total_harga", label: "Total Harga" },
     { key: "createdAt", label: "Dibuat" },

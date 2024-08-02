@@ -19,10 +19,10 @@ interface OrderItem {
 
 interface Order {
   id: number;
-  atasNama: string;
+  atas_nama: string;
   banyak_orang: number;
   createdAt: string;
-  id_users: string;
+  id_user: string;
 }
 
 interface OrderData {
@@ -57,7 +57,7 @@ export default function OrderCards() {
 
   async function updateOrderStatus(orderId: number) {
     setDetailsLoading(true);
-    const { data, error } = await fetchApi(`/pesanan/${orderId}`, "PUT", {
+    const { data, error } = await fetchApi(`/pesanan/${orderId}`, "PATCH", {
       status: "selesai",
     });
 
@@ -188,7 +188,7 @@ export default function OrderCards() {
                       disabled
                       className="text-end bg-white font-medium"
                       type="text"
-                      value={orderData.order[0].atasNama}
+                      value={orderData.order[0].atas_nama}
                     />
                   </div>
                   <div className="flex justify-between">
@@ -217,7 +217,7 @@ export default function OrderCards() {
                       disabled
                       className="text-end bg-white font-medium w-full"
                       type="text"
-                      value={orderData.order[0].id_users.split("-")[0]}
+                      value={orderData.order[0].id_user}
                     />
                   </div>
                 </div>
