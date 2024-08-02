@@ -34,7 +34,11 @@ export default function TablePesanan() {
 
   const columns = [
     { key: "id", label: "Id Nota" },
-    { key: "atas_nama", label: "Atas Nama", render: (row:any) => row.reservasi2?.atas_nama },
+    {
+      key: "atas_nama",
+      label: "Atas Nama",
+      render: (row: any) => row.reservasi?.atas_nama,
+    },
     { key: "banyak_orang", label: "Banyak Orang" },
     { key: "createdAt", label: "Dibuat" },
     { key: "status", label: "Status" },

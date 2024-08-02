@@ -6,5 +6,5 @@ export async function GET() {
     const supabase = createClient()
     const { data: meja } = await supabase.from('meja').select()
     
-    return getResponse(meja, 'Pesanan fetched successfully', 200)
+    return getResponse(meja, 'Meja fetched successfully', 200)
   }

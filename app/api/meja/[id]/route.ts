@@ -18,10 +18,10 @@ export async function GET(req:NextRequest,{params}:any) {
     }
 
     const { data: reservasi, error: reservasiError } = await supabase
-        .from('reservasi2')
-        .select()
+        .from('reservasi')
+        .select('* , users (nama)')
         .eq('no_meja', meja.no_meja)
-        .eq('status', 'ontable');
+        .eq('status', 'ontable')
 
     if (reservasiError) {
         return new NextResponse('Error fetching reservations', { status: 500 });
@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest, { params }: any) {
     }
 
     const { data: reservasi, error: reservasiError } = await supabase
-        .from('reservasi2')
+        .from('reservasi')
         .update({status: "done"})
         .eq('no_meja', meja.no_meja)
         .eq('status', 'ontable').select();

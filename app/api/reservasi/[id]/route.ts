@@ -14,7 +14,7 @@ export async function PUT(req:NextRequest,{params}:any) {
   const supabase = createClient()
   const { id } = params
   const {
-    atasNama, jumlahOrang, nomorHp, noMeja
+    atasNama, jumlahOrang, nomorHp, noMeja, tanggal
   } = await req.json();
 
   
@@ -46,13 +46,14 @@ export async function PUT(req:NextRequest,{params}:any) {
   if (errorAuth) return getResponse(errorAuth, 'error get user', 500)
   
   console.log(atasNama, jumlahOrang, noMeja, nomorHp, id);
-  const { data: reservasi, error } = await supabase.from('reservasi2').update([{
+  const { data: reservasi, error } = await supabase.from('reservasi').update([{
     id_user: user?.id,
     no_meja: noMeja,
     status: status,
     atas_nama: atasNama,
     banyak_orang: jumlahOrang,
     no_telp: nomorHp,
+    tanggal: tanggal
   }]).eq('id',id).select()
 
   if (error) {

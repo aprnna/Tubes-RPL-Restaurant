@@ -1,40 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
-import { get } from "http";
 import fetchApi from "@/utils/fetchApi";
+import { DatePicker } from "@nextui-org/react";
+import {
+  DateValue,
+  parseAbsoluteToLocal,
+  toLocalTimeZone,
+} from "@internationalized/date";
+
 export default function FormReservasi({ initialData }: { initialData?: any }) {
-  let { atasNama, jumlah, noHp, noMeja} = initialData || {};
+  let { atasNama, jumlah, noHp, noMeja, tanggal } = initialData || {};
   const [data, setData] = useState({
     atasNama: atasNama || "",
     jumlah: jumlah || "",
     noHp: noHp || "",
     noMeja: noMeja || null,
+    tanggal: tanggal
+      ? new Date(tanggal).toISOString()
+      : new Date().toISOString(),
   });
-
   const [meja, setMeja] = useState([]);
 
   const getMeja = async () => {
-    const {data} = await fetchApi("/meja", "GET");
+    const { data } = await fetchApi("/meja", "GET");
 
-    const filteredData = data.filter((item: any) =>
-      item.status == "Available"
+    const filteredData = data.filter((item: any) => item.status == "Available");
+
+    const sortedData = filteredData.sort(
+      (a: any, b: any) => a.no_meja - b.no_meja
     );
 
-    const sortedData = filteredData.sort((a: any, b: any) => a.no_meja - b.no_meja);
-
     setMeja(sortedData);
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getMeja();
-  },[])
-
+  }, []);
 
   const handleSelectChange = (key: any) => {
-    setData(prevData => ({
+    setData((prevData) => ({
       ...prevData,
       noMeja: key,
+    }));
+  };
+
+  const handleDateChange = (date: DateValue) => {
+    const formattedDate = date.toDate("Asia/Bangkok").toISOString();
+
+    setData((prevData) => ({
+      ...prevData,
+      tanggal: formattedDate,
     }));
   };
 
@@ -49,6 +65,12 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
         placeholder="Masukan Nama Anda"
         size="lg"
       />
+      <DatePicker
+        label="Tanggal"
+        value={parseAbsoluteToLocal(data.tanggal)}
+        onChange={handleDateChange}
+        labelPlacement="outside"
+      />
       <div className="flex gap-5">
         <Input
           label="Jumlah Orang"
@@ -61,30 +83,32 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
           type="number"
         />
         <Input
-          label="Nomor HandPhone"
+          label="Nomor Handphone"
+          pattern="[0-9]+"
           labelPlacement="outside"
           name="nomorHp"
           value={data.noHp}
           onChange={(e) => setData({ ...data, noHp: e.target.value })}
           placeholder="Nomor Handphone"
           size="lg"
-          />
+        />
       </div>
-        <Select
-          // className="max-w-xs"
-          label="Nomor Meja"
-          labelPlacement="outside"
-          name="noMeja"
-          // defaultSelectedKeys={[data.noMeja]}
-          selectedKeys={data.noMeja}
-          onChange={()=>handleSelectChange}
-          placeholder="Nomor Meja"
-          size="lg"
-        >
-          {meja.map((item:any) => (
-            <SelectItem key={item.no_meja} textValue={item.no_meja}>Meja {item.no_meja}, Max {item.kapasitas}</SelectItem>
-          ))}
-        </Select>
+      <Select
+        label="Nomor Meja"
+        labelPlacement="outside"
+        name="noMeja"
+        // defaultSelectedKeys={[data.noMeja]}
+        selectedKeys={data.noMeja}
+        onChange={() => handleSelectChange}
+        placeholder="Nomor Meja"
+        size="lg"
+      >
+        {meja.map((item: any) => (
+          <SelectItem key={item.no_meja} textValue={item.no_meja}>
+            Meja {item.no_meja}, Max {item.kapasitas}
+          </SelectItem>
+        ))}
+      </Select>
     </>
   );
 }

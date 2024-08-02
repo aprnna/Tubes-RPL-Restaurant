@@ -5,18 +5,31 @@ import { NextRequest } from "next/server"
 
 export async function GET() {
     const supabase = createClient()
-    const { data: reservasi } = await supabase.from('reservasi2').select()
-  
-    return getResponse(reservasi, 'Pesanan fetched successfully', 200)
+    const { data: reservasi } = await supabase.from('reservasi').select(`*, users ( nama )`)
+    const transformReservasiData = (reservasi:any) => {
+      return reservasi.map((item:any) => ({
+        id: item.id,
+        id_user: item.id_user,
+        no_meja: item.no_meja,
+        tanggal: item.tanggal,
+        atas_nama: item.atas_nama,
+        banyak_orang: item.banyak_orang,
+        no_telp: item.no_telp,
+        status: item.status,
+        nama_pelayan: item.users.nama,
+      }));
+    };
+
+    return getResponse(transformReservasiData(reservasi), 'Pesanan fetched successfully', 200)
   }
 
 export async function POST(req: NextRequest) {
   const supabase = createClient()
   const {
-    atasNama, jumlahOrang, nomorHp, noMeja
+    atasNama, jumlahOrang, nomorHp, noMeja, tanggal
   } = await req.json();
 
-  console.log(atasNama, jumlahOrang, noMeja, nomorHp);
+  console.log(atasNama, jumlahOrang, noMeja, nomorHp, tanggal);
 
   let status = "";
 
@@ -44,13 +57,14 @@ export async function POST(req: NextRequest) {
   if (errorAuth) return getResponse(errorAuth, 'error get user', 500)
 
 
-  const { data: reservasi, error } = await supabase.from('reservasi2').insert({
+  const { data: reservasi, error } = await supabase.from('reservasi').insert({
     id_user: user?.id,
     no_meja: noMeja,
     status: status,
     atas_nama: atasNama,
     banyak_orang: jumlahOrang,
     no_telp: nomorHp,
+    tanggal: tanggal
   }).select().single()
   
   if (error) {
