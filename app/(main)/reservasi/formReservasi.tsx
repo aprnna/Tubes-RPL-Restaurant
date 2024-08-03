@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import fetchApi from "@/utils/fetchApi";
-import { DatePicker } from "@nextui-org/react";
+import { DatePicker, TimeInputValue } from "@nextui-org/react";
 import {
   DateValue,
   parseAbsoluteToLocal,
@@ -17,8 +17,8 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
     noHp: noHp || "",
     noMeja: noMeja || null,
     tanggal: tanggal
-      ? new Date(tanggal).toISOString()
-      : new Date().toISOString(),
+      ? (new Date(tanggal).toISOString() as any)
+      : (new Date().toISOString() as any),
   });
   const [meja, setMeja] = useState([]);
 
@@ -45,7 +45,7 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
     }));
   };
 
-  const handleDateChange = (date: DateValue) => {
+  const handleDateChange = (date: any) => {
     const formattedDate = date.toDate("Asia/Bangkok").toISOString();
 
     setData((prevData) => ({
@@ -67,7 +67,7 @@ export default function FormReservasi({ initialData }: { initialData?: any }) {
       />
       <DatePicker
         label="Tanggal"
-        value={parseAbsoluteToLocal(data.tanggal)}
+        value={parseAbsoluteToLocal(data.tanggal) as any}
         onChange={handleDateChange}
         labelPlacement="outside"
       />

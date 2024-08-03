@@ -1,13 +1,17 @@
 "use client";
+
 import TopContent from "@/components/top-content";
 import Head from "@/components/head";
-import { useDisclosure } from "@nextui-org/modal";
+import React from "react";
 import { useEffect, useState } from "react";
 import fetchApi from "@/utils/fetchApi";
 import TablePemasukan from "./TablePemasukan";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { RangeCalendar } from "@nextui-org/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
+import type { DateValue } from "@react-types/calendar";
+import type { RangeValue } from "@react-types/shared";
+
 interface Data {
   profit: number;
   banyakPelanggan: number;
@@ -22,9 +26,10 @@ export default function Page() {
   });
   const [loading, setLoading] = useState(false);
   const [querySearch, setQuerySearch] = useState("");
-  const [value, setValue] = useState({
-    start: today(getLocalTimeZone()).add({ weeks: -1 }),
-    end: today(getLocalTimeZone()).add({ weeks: 1 }),
+
+  let [value, setValue] = useState<RangeValue<DateValue>>({
+    start: today(getLocalTimeZone()).add({ weeks: -1 }) as any,
+    end: today(getLocalTimeZone()).add({ weeks: 1 }) as any,
   });
 
   async function getData() {
