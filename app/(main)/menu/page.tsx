@@ -23,10 +23,10 @@ export default function Page() {
       body: formData,
     });
 
-    if (!response.ok) toast.error("Gagal menambahkan Menu");
-    else toast.success("Berhasil menambahkan Menu");
     setLoading(false);
     modal.onClose();
+    if (!response.ok) toast.error("Gagal menambahkan Menu");
+    else toast.success("Berhasil menambahkan Menu");
     window.location.reload();
   }
 

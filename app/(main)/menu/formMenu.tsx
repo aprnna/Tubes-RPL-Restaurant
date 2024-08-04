@@ -56,7 +56,6 @@ export default function FormMenu({ initialData }: { initialData?: any }) {
       />
       <Select
         required
-        className="max-w-xs"
         label="Kategori"
         labelPlacement="outside"
         name="kategori"

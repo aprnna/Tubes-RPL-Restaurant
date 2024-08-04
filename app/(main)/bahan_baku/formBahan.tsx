@@ -57,7 +57,6 @@ export default function FormBahan({ initialData }: { initialData?: any }) {
           size="lg"
         />
         <Select
-          className="max-w-xs"
           label="Satuan"
           labelPlacement="outside"
           name="satuan"

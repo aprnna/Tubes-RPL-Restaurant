@@ -59,10 +59,11 @@ export default function TableMenu() {
       body: formData,
     });
 
-    if (!response.ok) toast.error("Gagal menambahkan Menu");
-    else toast.success("Berhasil menambahkan Menu");
     setLoadingUpdate(false);
     modalUpdate.onClose();
+
+    if (!response.ok) toast.error("Gagal menambahkan Menu");
+    else toast.success("Berhasil menambahkan Menu");
     window.location.reload();
   };
 
@@ -77,10 +78,10 @@ export default function TableMenu() {
     setLoadingDelete(true);
     const response = await fetchApi(`/menu/${idMenu}`, "DELETE");
 
-    if (response.status !== 200) toast.error("Gagal menghapus Menu");
-    else toast.success("Berhasil menghapus Menu");
     setLoadingDelete(false);
     modal.onClose();
+    if (response.status !== 200) toast.error("Gagal menghapus Menu");
+    else toast.success("Berhasil menghapus Menu");
     window.location.reload();
   };
 
