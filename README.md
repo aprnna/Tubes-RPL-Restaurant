@@ -54,64 +54,14 @@ After modifying the `.npmrc` file, you need to run `pnpm install` again to ensur
 
 Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
 
-# Progress
-
-## Design
-
-### Kasir
-
-- design tambah pesanan ✅
-- design detail pesanan ✅
-- design detail cetak nota ✅
-- design tampilan pesanan ✅
-- design pencarian ✅
-- batasan tampilan sidebar ✅
-
+# Account
+### Admin/ Manajer
+ - Username : admin@komrest.com
+ - Passwrod : password
+### Pelayan
+ - Username : pelayan@komrest.com
+ - Passwrod : password
 ### Koki
+ - Username : koki@komrest.com
+ - Passwrod : password
 
-- design pesanan diproses ✅
-- design detail pesanan diproses ✅
-- design crud menu ✅
-- design table menu ✅
-- batasan tampilan sidebar ✅
-
-### Karyawan Gudang
-
-- design table bahan baku ✅
-- design crud bahan baku ✅
-- design riwayat bahan baku ✅
-- design pencarian ✅
-- batasan tampilan sidebar ✅
-
-### Manager
-
-- design laporan ❌
-
-## Fungsi
-
-### Kasir
-
-- post pesanan & item_pesanan ✅
-- get pesanan ✅
-- fungsi pencarian ✅
-- hak akses ✅
-
-### Koki
-
-- update status menjadi selesai ✅
-- get pesanan ongoing ✅
-- post menu ✅
-- update menu ✅
-- update ketersediaan menu ✅
-- hak akses ✅
-
-### Karyawan Gudang
-
-- get bahan baku ✅
-- get riwayat bahan baku ✅
-- post bahan baku ✅
-- update bahan baku ✅
-- fungsi pencarian ✅
-- hak akses ✅
-
-### Manager
