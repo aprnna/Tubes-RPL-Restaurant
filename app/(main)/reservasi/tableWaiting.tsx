@@ -22,10 +22,13 @@ import { Loading } from "@/components/loading";
 export default function TableWaiting({ querySearch }: any) {
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const [searchData, setSearchData] = useState([]);
-  const [idWaiting, setIdBahan] = useState(0);
+  const [idWaiting, setIdWaiting] = useState(0);
   const [editData, setEditData] = useState<any>();
   const modal = useDisclosure();
+  const modal2 = useDisclosure();
+
 
   const columns = [
     { key: "atas_nama", label: "Atas Nama" },
@@ -65,6 +68,12 @@ export default function TableWaiting({ querySearch }: any) {
     modal.onOpen();
   };
 
+  const handleDelete = async (id: number) => {
+    console.log("Delete item with id:", id);
+    setIdWaiting(id);
+    modal2.onOpen();
+  };
+
   async function handleEditSubmit(e: any) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -89,6 +98,20 @@ export default function TableWaiting({ querySearch }: any) {
     }
   }
 
+  const handleDeleteSubmit = async () => {
+    setLoadingDelete(true);
+    const response = await fetchApi(`/reservasi/${idWaiting}`, "DELETE");
+
+    if (response.status !== 200) toast.error("Gagal menghapus Reservasi");
+    else toast.success("Berhasil menghapus reservasi");
+    setLoadingDelete(false);
+
+    if (response.status == 200) {
+      modal2.onClose();
+      window.location.reload();
+    }
+  };
+
   useEffect(() => {
     getDataWaiting();
   }, []);
@@ -110,7 +133,7 @@ export default function TableWaiting({ querySearch }: any) {
           <Table
             columns={columns}
             data={querySearch == "" ? data : searchData}
-            // onDelete={handleDelete}
+            onDelete={handleDelete}
             onEdit={handleEdit}
           />
           <Modal
@@ -123,6 +146,16 @@ export default function TableWaiting({ querySearch }: any) {
             sizeModal="xl"
           >
             <FormReservasi initialData={editData} />
+          </Modal>
+          <Modal
+            isOpen={modal2.isOpen}
+            onOpenChange={modal2.onOpenChange}
+            btnActionTitle="Cancel Reservasi  "
+            title="Cancel Reservasi"
+            loading={loadingDelete}
+            submit={handleDeleteSubmit}
+          >
+            <h1>Are you sure want to cancel this reservasi?</h1>
           </Modal>
         </>
       )}

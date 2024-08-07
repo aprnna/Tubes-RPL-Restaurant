@@ -76,3 +76,15 @@ export async function PUT(req:NextRequest,{params}:any) {
 
   return getResponse(reservasi, 'Update Reservasi successfully', 201)
 }
+
+export async function DELETE(req:NextRequest,{params}:any) {
+  const supabase = createClient()
+  const {id} = params
+
+  const {data, error}:{data:any, error:any} = await supabase.from('reservasi').update({status:'cancel'}).eq('id',id).select().single()
+
+  if(error) return getResponse(error,"Failed delete reservasi",400)
+
+  return getResponse(data, "Success Delete reservasi",200)
+
+}
